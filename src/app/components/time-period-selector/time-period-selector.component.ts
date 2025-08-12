@@ -11,8 +11,8 @@ import { TimePeriod } from '../../services/app-store.service';
     MatButtonToggleModule
   ],
   template: `
-    <div class="flex items-center gap-2 mb-4">
-      <span class="text-sm font-semibold text-gray-700">Time Period:</span>
+    <div class="flex flex-col sm:flex-row sm:items-center gap-2 mb-4">
+      <span class="text-xs sm:text-sm font-semibold text-gray-700">Time Period:</span>
       <mat-button-toggle-group 
         [value]="selectedPeriod()" 
         (change)="onPeriodChange($event.value)"
@@ -20,37 +20,37 @@ import { TimePeriod } from '../../services/app-store.service';
       >
         <mat-button-toggle 
           value="1D" 
-          class="px-4 py-2 text-sm font-medium transition-all duration-200 hover:bg-gray-50"
+          class="px-2 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm font-medium transition-all duration-200 hover:bg-gray-50"
         >
           1D
         </mat-button-toggle>
         <mat-button-toggle 
           value="1W" 
-          class="px-4 py-2 text-sm font-medium transition-all duration-200 hover:bg-gray-50"
+          class="px-2 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm font-medium transition-all duration-200 hover:bg-gray-50"
         >
           1W
         </mat-button-toggle>
         <mat-button-toggle 
           value="1M" 
-          class="px-4 py-2 text-sm font-medium transition-all duration-200 hover:bg-gray-50"
+          class="px-2 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm font-medium transition-all duration-200 hover:bg-gray-50"
         >
           1M
         </mat-button-toggle>
         <mat-button-toggle 
           value="3M" 
-          class="px-4 py-2 text-sm font-medium transition-all duration-200 hover:bg-gray-50"
+          class="px-2 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm font-medium transition-all duration-200 hover:bg-gray-50"
         >
           3M
         </mat-button-toggle>
         <mat-button-toggle 
           value="6M" 
-          class="px-4 py-2 text-sm font-medium transition-all duration-200 hover:bg-gray-50"
+          class="px-2 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm font-medium transition-all duration-200 hover:bg-gray-50"
         >
           6M
         </mat-button-toggle>
         <mat-button-toggle 
           value="1Y" 
-          class="px-4 py-2 text-sm font-medium transition-all duration-200 hover:bg-gray-50"
+          class="px-2 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm font-medium transition-all duration-200 hover:bg-gray-50"
         >
           1Y
         </mat-button-toggle>

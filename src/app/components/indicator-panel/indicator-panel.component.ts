@@ -20,31 +20,31 @@ import { TechnicalIndicators, IndicatorSettings } from '../../services/app-store
     <mat-card class="mb-6 relative">
       <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-secondary-500 to-primary-500"></div>
       
-      <mat-card-header>
-        <mat-card-title class="flex items-center gap-2 text-gray-900 text-xl font-semibold mb-4">
-          <mat-icon class="text-2xl bg-gradient-to-r from-secondary-500 to-primary-500 bg-clip-text text-transparent">timeline</mat-icon>
+      <mat-card-header class="p-4 sm:p-6">
+        <mat-card-title class="flex items-center gap-2 text-gray-900 text-lg sm:text-xl font-semibold mb-4">
+          <mat-icon class="text-xl sm:text-2xl bg-gradient-to-r from-secondary-500 to-primary-500 bg-clip-text text-transparent">timeline</mat-icon>
           Technical Indicators
         </mat-card-title>
       </mat-card-header>
       
       <mat-card-content>
-        <div class="grid gap-8 mt-4 md:grid-cols-2 lg:grid-cols-3">
-          <div class="border border-gray-200 rounded-xl p-6 bg-gradient-to-br from-gray-50 to-white shadow-sm transition-all duration-300 relative overflow-hidden group hover:shadow-xl hover:scale-105 min-h-[280px]">
+        <div class="grid gap-4 sm:gap-8 mt-4 grid-cols-1 lg:grid-cols-3">
+          <div class="border border-gray-200 rounded-xl p-4 sm:p-6 bg-gradient-to-br from-gray-50 to-white shadow-sm transition-all duration-300 relative overflow-hidden group hover:shadow-xl hover:scale-105 min-h-[240px] sm:min-h-[280px]">
             <div class="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-primary-500 to-secondary-500 transform scale-x-0 transition-transform duration-300 group-hover:scale-x-100"></div>
             
-            <h4 class="text-sm font-semibold text-gray-700 uppercase tracking-wide bg-gray-200 px-3 py-2 rounded-md inline-block mb-6">
+            <h4 class="text-xs sm:text-sm font-semibold text-gray-700 uppercase tracking-wide bg-gray-200 px-2 sm:px-3 py-1 sm:py-2 rounded-md inline-block mb-4 sm:mb-6">
               Moving Averages
             </h4>
             
-            <div class="space-y-4">
-              <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center py-4 border-b border-gray-200 transition-all duration-200 hover:bg-gray-50 hover:px-3 hover:rounded-md group/item">
-                <div class="flex items-center gap-3 mb-3 sm:mb-0">
+            <div class="space-y-3 sm:space-y-4">
+              <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center py-3 sm:py-4 border-b border-gray-200 transition-all duration-200 hover:bg-gray-50 hover:px-2 sm:hover:px-3 hover:rounded-md group/item">
+                <div class="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-0">
                   <mat-slide-toggle 
                     [checked]="enabledIndicators().sma20"
                     (change)="onToggle('sma20')"
                     color="primary"
                   >
-                    SMA 20
+                    <span class="text-sm sm:text-base">SMA 20</span>
                   </mat-slide-toggle>
                   <mat-icon 
                     matTooltip="Simple Moving Average (20 periods)
@@ -54,26 +54,26 @@ Usage: Price above SMA = bullish, below = bearish
 Best for: Short-term trading decisions"
                     [matTooltipClass]="'custom-tooltip'"
                     matTooltipPosition="right"
-                    class="text-xl text-gray-400 cursor-pointer hover:text-primary-500 transition-colors flex-shrink-0"
+                    class="text-lg sm:text-xl text-gray-400 cursor-pointer hover:text-primary-500 transition-colors flex-shrink-0"
                   >
                     info_outline
                   </mat-icon>
                 </div>
                 @if (enabledIndicators().sma20 && technicalIndicators().sma20) {
-                  <div class="font-bold text-gray-900 text-right bg-white px-4 py-2 rounded-md border border-gray-200 min-w-24 flex-shrink-0">
+                  <div class="font-bold text-gray-900 text-right bg-white px-3 sm:px-4 py-1 sm:py-2 rounded-md border border-gray-200 min-w-20 sm:min-w-24 flex-shrink-0 text-sm sm:text-base">
                     {{ getLatestValue(technicalIndicators().sma20!) | number:'1.2-2' }}
                   </div>
                 }
               </div>
 
-              <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center py-4 transition-all duration-200 hover:bg-gray-50 hover:px-3 hover:rounded-md group/item">
-                <div class="flex items-center gap-3 mb-3 sm:mb-0">
+              <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center py-3 sm:py-4 transition-all duration-200 hover:bg-gray-50 hover:px-2 sm:hover:px-3 hover:rounded-md group/item">
+                <div class="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-0">
                   <mat-slide-toggle 
                     [checked]="enabledIndicators().sma50"
                     (change)="onToggle('sma50')"
                     color="primary"
                   >
-                    SMA 50
+                    <span class="text-sm sm:text-base">SMA 50</span>
                   </mat-slide-toggle>
                   <mat-icon 
                     matTooltip="Simple Moving Average (50 periods)
@@ -83,13 +83,13 @@ Usage: Price above SMA = bullish trend, below = bearish
 Best for: Medium-term trend analysis"
                     [matTooltipClass]="'custom-tooltip'"
                     matTooltipPosition="right"
-                    class="text-xl text-gray-400 cursor-pointer hover:text-primary-500 transition-colors flex-shrink-0"
+                    class="text-lg sm:text-xl text-gray-400 cursor-pointer hover:text-primary-500 transition-colors flex-shrink-0"
                   >
                     info_outline
                   </mat-icon>
                 </div>
                 @if (enabledIndicators().sma50 && technicalIndicators().sma50) {
-                  <div class="font-bold text-gray-900 text-right bg-white px-4 py-2 rounded-md border border-gray-200 min-w-24 flex-shrink-0">
+                  <div class="font-bold text-gray-900 text-right bg-white px-3 sm:px-4 py-1 sm:py-2 rounded-md border border-gray-200 min-w-20 sm:min-w-24 flex-shrink-0 text-sm sm:text-base">
                     {{ getLatestValue(technicalIndicators().sma50!) | number:'1.2-2' }}
                   </div>
                 }
@@ -97,22 +97,22 @@ Best for: Medium-term trend analysis"
             </div>
           </div>
 
-          <div class="border border-gray-200 rounded-xl p-6 bg-gradient-to-br from-gray-50 to-white shadow-sm transition-all duration-300 relative overflow-hidden group hover:shadow-xl hover:scale-105 min-h-[280px]">
+          <div class="border border-gray-200 rounded-xl p-4 sm:p-6 bg-gradient-to-br from-gray-50 to-white shadow-sm transition-all duration-300 relative overflow-hidden group hover:shadow-xl hover:scale-105 min-h-[240px] sm:min-h-[280px]">
             <div class="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-primary-500 to-secondary-500 transform scale-x-0 transition-transform duration-300 group-hover:scale-x-100"></div>
             
-            <h4 class="text-sm font-semibold text-gray-700 uppercase tracking-wide bg-gray-200 px-3 py-2 rounded-md inline-block mb-6">
+            <h4 class="text-xs sm:text-sm font-semibold text-gray-700 uppercase tracking-wide bg-gray-200 px-2 sm:px-3 py-1 sm:py-2 rounded-md inline-block mb-4 sm:mb-6">
               Exponential Moving Averages
             </h4>
             
-            <div class="space-y-4">
-              <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center py-4 border-b border-gray-200 transition-all duration-200 hover:bg-gray-50 hover:px-3 hover:rounded-md group/item">
-                <div class="flex items-center gap-3 mb-3 sm:mb-0">
+            <div class="space-y-3 sm:space-y-4">
+              <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center py-3 sm:py-4 border-b border-gray-200 transition-all duration-200 hover:bg-gray-50 hover:px-2 sm:hover:px-3 hover:rounded-md group/item">
+                <div class="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-0">
                   <mat-slide-toggle 
                     [checked]="enabledIndicators().ema12"
                     (change)="onToggle('ema12')"
                     color="accent"
                   >
-                    EMA 12
+                    <span class="text-sm sm:text-base">EMA 12</span>
                   </mat-slide-toggle>
                   <mat-icon 
                     matTooltip="Exponential Moving Average (12 periods)
@@ -122,26 +122,26 @@ Usage: More weight to recent prices
 Best for: Short-term momentum trading"
                     [matTooltipClass]="'custom-tooltip'"
                     matTooltipPosition="right"
-                    class="text-xl text-gray-400 cursor-pointer hover:text-primary-500 transition-colors flex-shrink-0"
+                    class="text-lg sm:text-xl text-gray-400 cursor-pointer hover:text-primary-500 transition-colors flex-shrink-0"
                   >
                     info_outline
                   </mat-icon>
                 </div>
                 @if (enabledIndicators().ema12 && technicalIndicators().ema12) {
-                  <div class="font-bold text-gray-900 text-right bg-white px-4 py-2 rounded-md border border-gray-200 min-w-24 flex-shrink-0">
+                  <div class="font-bold text-gray-900 text-right bg-white px-3 sm:px-4 py-1 sm:py-2 rounded-md border border-gray-200 min-w-20 sm:min-w-24 flex-shrink-0 text-sm sm:text-base">
                     {{ getLatestValue(technicalIndicators().ema12!) | number:'1.2-2' }}
                   </div>
                 }
               </div>
 
-              <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center py-4 transition-all duration-200 hover:bg-gray-50 hover:px-3 hover:rounded-md group/item">
-                <div class="flex items-center gap-3 mb-3 sm:mb-0">
+              <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center py-3 sm:py-4 transition-all duration-200 hover:bg-gray-50 hover:px-2 sm:hover:px-3 hover:rounded-md group/item">
+                <div class="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-0">
                   <mat-slide-toggle 
                     [checked]="enabledIndicators().ema26"
                     (change)="onToggle('ema26')"
                     color="accent"
                   >
-                    EMA 26
+                    <span class="text-sm sm:text-base">EMA 26</span>
                   </mat-slide-toggle>
                   <mat-icon 
                     matTooltip="Exponential Moving Average (26 periods)
@@ -151,13 +151,13 @@ Usage: Often used with EMA 12 for MACD calculation
 Best for: Trend confirmation and MACD signals"
                     [matTooltipClass]="'custom-tooltip'"
                     matTooltipPosition="right"
-                    class="text-xl text-gray-400 cursor-pointer hover:text-primary-500 transition-colors flex-shrink-0"
+                    class="text-lg sm:text-xl text-gray-400 cursor-pointer hover:text-primary-500 transition-colors flex-shrink-0"
                   >
                     info_outline
                   </mat-icon>
                 </div>
                 @if (enabledIndicators().ema26 && technicalIndicators().ema26) {
-                  <div class="font-bold text-gray-900 text-right bg-white px-4 py-2 rounded-md border border-gray-200 min-w-24 flex-shrink-0">
+                  <div class="font-bold text-gray-900 text-right bg-white px-3 sm:px-4 py-1 sm:py-2 rounded-md border border-gray-200 min-w-20 sm:min-w-24 flex-shrink-0 text-sm sm:text-base">
                     {{ getLatestValue(technicalIndicators().ema26!) | number:'1.2-2' }}
                   </div>
                 }
@@ -165,22 +165,22 @@ Best for: Trend confirmation and MACD signals"
             </div>
           </div>
 
-          <div class="border border-gray-200 rounded-xl p-6 bg-gradient-to-br from-gray-50 to-white shadow-sm transition-all duration-300 relative overflow-hidden group hover:shadow-xl hover:scale-105 min-h-[320px]">
+          <div class="border border-gray-200 rounded-xl p-4 sm:p-6 bg-gradient-to-br from-gray-50 to-white shadow-sm transition-all duration-300 relative overflow-hidden group hover:shadow-xl hover:scale-105 min-h-[280px] sm:min-h-[320px] lg:col-span-1">
             <div class="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-primary-500 to-secondary-500 transform scale-x-0 transition-transform duration-300 group-hover:scale-x-100"></div>
             
-            <h4 class="text-sm font-semibold text-gray-700 uppercase tracking-wide bg-gray-200 px-3 py-2 rounded-md inline-block mb-6">
+            <h4 class="text-xs sm:text-sm font-semibold text-gray-700 uppercase tracking-wide bg-gray-200 px-2 sm:px-3 py-1 sm:py-2 rounded-md inline-block mb-4 sm:mb-6">
               Oscillators
             </h4>
             
-            <div class="space-y-4">
-              <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center py-4 border-b border-gray-200 transition-all duration-200 hover:bg-gray-50 hover:px-3 hover:rounded-md group/item">
-                <div class="flex items-center gap-3 mb-3 sm:mb-0">
+            <div class="space-y-3 sm:space-y-4">
+              <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center py-3 sm:py-4 border-b border-gray-200 transition-all duration-200 hover:bg-gray-50 hover:px-2 sm:hover:px-3 hover:rounded-md group/item">
+                <div class="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-0">
                   <mat-slide-toggle 
                     [checked]="enabledIndicators().rsi"
                     (change)="onToggle('rsi')"
                     color="warn"
                   >
-                    RSI (14)
+                    <span class="text-sm sm:text-base">RSI (14)</span>
                   </mat-slide-toggle>
                   <mat-icon 
                     matTooltip="Relative Strength Index (14 periods)
@@ -190,13 +190,13 @@ Usage: Above 70 = overbought, below 30 = oversold
 Best for: Identifying potential reversals"
                     [matTooltipClass]="'custom-tooltip'"
                     matTooltipPosition="right"
-                    class="text-xl text-gray-400 cursor-pointer hover:text-primary-500 transition-colors flex-shrink-0"
+                    class="text-lg sm:text-xl text-gray-400 cursor-pointer hover:text-primary-500 transition-colors flex-shrink-0"
                   >
                     info_outline
                   </mat-icon>
                 </div>
                 @if (enabledIndicators().rsi && technicalIndicators().rsi) {
-                  <div class="font-bold text-right px-4 py-2 rounded-md border min-w-28 flex-shrink-0" 
+                  <div class="font-bold text-right px-3 sm:px-4 py-1 sm:py-2 rounded-md border min-w-24 sm:min-w-28 flex-shrink-0 text-sm sm:text-base" 
                        [class]="getRSIClasses()">
                     {{ getLatestValue(technicalIndicators().rsi!) | number:'1.2-2' }}
                     <span class="text-xs font-medium opacity-80 ml-1">({{ getRSIStatus() }})</span>
@@ -204,14 +204,14 @@ Best for: Identifying potential reversals"
                 }
               </div>
 
-              <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start py-4 transition-all duration-200 hover:bg-gray-50 hover:px-3 hover:rounded-md group/item">
-                <div class="flex items-center gap-3 mb-3 sm:mb-0">
+              <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start py-3 sm:py-4 transition-all duration-200 hover:bg-gray-50 hover:px-2 sm:hover:px-3 hover:rounded-md group/item">
+                <div class="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-0">
                   <mat-slide-toggle 
                     [checked]="enabledIndicators().macd"
                     (change)="onToggle('macd')"
                     color="warn"
                   >
-                    MACD
+                    <span class="text-sm sm:text-base">MACD</span>
                   </mat-slide-toggle>
                   <mat-icon 
                     matTooltip="Moving Average Convergence Divergence
@@ -221,20 +221,20 @@ Usage: MACD line crossing signal line = buy/sell signal
 Best for: Trend changes and momentum analysis"
                     [matTooltipClass]="'custom-tooltip'"
                     matTooltipPosition="right"
-                    class="text-xl text-gray-400 cursor-pointer hover:text-primary-500 transition-colors flex-shrink-0"
+                    class="text-lg sm:text-xl text-gray-400 cursor-pointer hover:text-primary-500 transition-colors flex-shrink-0"
                   >
                     info_outline
                   </mat-icon>
                 </div>
                 @if (enabledIndicators().macd && technicalIndicators().macd) {
-                  <div class="text-right flex flex-col gap-2 w-full sm:w-auto">
-                    <div class="font-bold text-gray-900 bg-white px-4 py-2 rounded-md border border-gray-200 text-sm min-w-36 flex-shrink-0">
+                  <div class="text-right flex flex-col gap-1 sm:gap-2 w-full sm:w-auto">
+                    <div class="font-bold text-gray-900 bg-white px-3 sm:px-4 py-1 sm:py-2 rounded-md border border-gray-200 text-xs sm:text-sm min-w-32 sm:min-w-36 flex-shrink-0">
                       MACD: {{ getLatestValue(technicalIndicators().macd!.macd) | number:'1.2-2' }}
                     </div>
-                    <div class="font-bold text-gray-900 bg-white px-4 py-2 rounded-md border border-gray-200 text-sm min-w-36 flex-shrink-0">
+                    <div class="font-bold text-gray-900 bg-white px-3 sm:px-4 py-1 sm:py-2 rounded-md border border-gray-200 text-xs sm:text-sm min-w-32 sm:min-w-36 flex-shrink-0">
                       Signal: {{ getLatestValue(technicalIndicators().macd!.signal) | number:'1.2-2' }}
                     </div>
-                    <div class="font-bold text-gray-900 bg-white px-4 py-2 rounded-md border border-gray-200 text-sm min-w-36 flex-shrink-0">
+                    <div class="font-bold text-gray-900 bg-white px-3 sm:px-4 py-1 sm:py-2 rounded-md border border-gray-200 text-xs sm:text-sm min-w-32 sm:min-w-36 flex-shrink-0">
                       Histogram: {{ getLatestValue(technicalIndicators().macd!.histogram) | number:'1.2-2' }}
                     </div>
                   </div>

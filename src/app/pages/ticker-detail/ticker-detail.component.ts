@@ -33,49 +33,51 @@ import { TimePeriodSelectorComponent } from '../../components/time-period-select
     <div class="min-h-screen bg-gray-50 relative">
       <div class="absolute top-0 left-0 right-0 h-48 bg-gradient-to-br from-primary-500 to-secondary-500 opacity-5 pointer-events-none"></div>
 
-      <mat-toolbar color="primary" class="relative z-10 bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-lg">
+      <mat-toolbar color="primary" class="relative z-10 bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-lg px-2 sm:px-4">
         <button mat-icon-button (click)="navigateBack()" class="text-gray-600 hover:text-gray-900">
           <mat-icon>arrow_back</mat-icon>
         </button>
-        <mat-icon class="mx-3 text-2xl bg-gradient-to-r from-primary-500 to-secondary-500 bg-clip-text text-transparent">trending_up</mat-icon>
-        <span class="text-xl font-semibold text-gray-900">Technical Analysis Dashboard</span>
-        <span class="flex-1"></span>
+        <div class="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+          <mat-icon class="text-xl sm:text-2xl bg-gradient-to-r from-primary-500 to-secondary-500 bg-clip-text text-transparent flex-shrink-0">trending_up</mat-icon>
+          <span class="text-sm sm:text-xl font-semibold text-gray-900 truncate">Technical Analysis</span>
+        </div>
         @if (currentSymbol()) {
-          <div class="flex items-center gap-4 p-2 bg-gray-100 rounded-xl border border-gray-200">
-            <span class="text-lg font-bold px-3 py-1 bg-gradient-to-r from-primary-500 to-secondary-500 text-white rounded-lg shadow-sm">
+          <div class="flex items-center gap-2 sm:gap-4 p-1 sm:p-2 bg-gray-100 rounded-lg sm:rounded-xl border border-gray-200 flex-shrink-0">
+            <span class="text-sm sm:text-lg font-bold px-2 sm:px-3 py-1 bg-gradient-to-r from-primary-500 to-secondary-500 text-white rounded-md sm:rounded-lg shadow-sm">
               {{ currentSymbol()?.toUpperCase() }}
             </span>
             @if (latestPrice()) {
-              <span class="text-base font-semibold text-gray-700">\${{ latestPrice()!.close | number:'1.2-2' }}</span>
+              <span class="text-xs sm:text-base font-semibold text-gray-700 hidden sm:block">\${{ latestPrice()!.close | number:'1.2-2' }}</span>
             }
           </div>
         }
       </mat-toolbar>
 
-      <div class="p-6 max-w-7xl mx-auto relative z-5">
+      <div class="p-3 sm:p-6 max-w-7xl mx-auto relative z-5">
         @if (isLoading()) {
-          <div class="flex flex-col items-center justify-center min-h-[500px] text-gray-600 bg-white rounded-xl shadow-lg my-8">
-            <mat-progress-spinner diameter="50" mode="indeterminate" class="text-primary-500"></mat-progress-spinner>
-            <p class="mt-4 italic text-lg">Loading market data...</p>
+          <div class="flex flex-col items-center justify-center min-h-[400px] sm:min-h-[500px] text-gray-600 bg-white rounded-xl shadow-lg my-4 sm:my-8">
+            <mat-progress-spinner diameter="40" mode="indeterminate" class="text-primary-500 sm:w-12 sm:h-12"></mat-progress-spinner>
+            <p class="mt-4 italic text-base sm:text-lg">Loading market data...</p>
           </div>
         } @else if (errorMessage()) {
-          <mat-card class="my-10 mx-auto max-w-2xl border border-red-200 bg-gradient-to-br from-red-50 to-white">
+          <mat-card class="my-6 sm:my-10 mx-auto max-w-2xl border border-red-200 bg-gradient-to-br from-red-50 to-white">
             <mat-card-content>
-              <div class="flex flex-col items-center text-center p-8">
-                <mat-icon color="warn" class="text-6xl mb-4 text-red-500">error</mat-icon>
-                <h3 class="text-2xl font-semibold text-gray-900 mb-3">Data Not Available</h3>
-                <p class="text-lg text-gray-600 leading-relaxed mb-6">{{ errorMessage() }}</p>
+              <div class="flex flex-col items-center text-center p-6 sm:p-8">
+                <mat-icon color="warn" class="text-4xl sm:text-6xl mb-4 text-red-500">error</mat-icon>
+                <h3 class="text-xl sm:text-2xl font-semibold text-gray-900 mb-3">Data Not Available</h3>
+                <p class="text-base sm:text-lg text-gray-600 leading-relaxed mb-6">{{ errorMessage() }}</p>
                 <button mat-button color="primary" (click)="navigateBack()" class="bg-gradient-to-r from-primary-500 to-secondary-500 text-white hover:shadow-lg transition-all duration-200">
                   <mat-icon>arrow_back</mat-icon>
-                  Back to Dashboard
+                  <span class="hidden sm:inline">Back to Dashboard</span>
+                  <span class="sm:hidden">Back</span>
                 </button>
               </div>
             </mat-card-content>
           </mat-card>
         } @else if (priceData().length > 0) {
-          <div class="mb-6 animate-fade-in-up">
-            <div class="flex justify-between items-center mb-4">
-              <h2 class="text-2xl font-bold text-gray-900">Price Chart</h2>
+          <div class="mb-4 sm:mb-6 animate-fade-in-up">
+            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-0 mb-4">
+              <h2 class="text-xl sm:text-2xl font-bold text-gray-900">Price Chart</h2>
               <app-time-period-selector 
                 [selectedPeriod]="selectedTimePeriod()"
                 (periodChanged)="onTimePeriodChanged($event)"
@@ -88,7 +90,7 @@ import { TimePeriodSelectorComponent } from '../../components/time-period-select
             />
           </div>
 
-          <div class="space-y-6 animate-fade-in-up animation-delay-200">
+          <div class="space-y-4 sm:space-y-6 animate-fade-in-up animation-delay-200">
             <div>
               <app-indicator-panel
                 [technicalIndicators]="technicalIndicators()"
@@ -111,6 +113,13 @@ import { TimePeriodSelectorComponent } from '../../components/time-period-select
   styles: [`
     .animation-delay-200 {
       animation-delay: 0.2s;
+    }
+    
+    @media (max-width: 640px) {
+      .mat-toolbar {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+      }
     }
   `],
   changeDetection: ChangeDetectionStrategy.OnPush

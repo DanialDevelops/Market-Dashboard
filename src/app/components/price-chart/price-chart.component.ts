@@ -7,8 +7,8 @@ import { PriceData, TechnicalIndicators, IndicatorSettings } from '../../service
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="w-full h-[450px] relative bg-white rounded-xl p-4 shadow-lg border border-gray-200 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
-      <svg [attr.viewBox]="viewBox()" class="w-full h-[380px] border border-gray-200 rounded-lg bg-gradient-to-br from-gray-50 to-white relative">
+    <div class="w-full h-[350px] sm:h-[450px] relative bg-white rounded-xl p-3 sm:p-4 shadow-lg border border-gray-200 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+      <svg [attr.viewBox]="viewBox()" class="w-full h-[280px] sm:h-[380px] border border-gray-200 rounded-lg bg-gradient-to-br from-gray-50 to-white relative">
         <defs>
           <pattern id="grid" width="40" height="20" patternUnits="userSpaceOnUse">
             <path d="M 40 0 L 0 0 0 20" fill="none" stroke="#e5e7eb" stroke-width="1"/>
@@ -92,32 +92,32 @@ import { PriceData, TechnicalIndicators, IndicatorSettings } from '../../service
         }
       </svg>
       
-      <div class="flex flex-wrap gap-4 mt-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
-        <div class="flex items-center gap-2 text-sm text-gray-700 font-medium px-2 py-1 rounded-md bg-white border border-gray-200 transition-all duration-200 hover:bg-gray-100 hover:-translate-y-1 hover:shadow-sm">
-          <div class="w-6 h-1 rounded-sm bg-primary-500 shadow-sm"></div>
+      <div class="flex flex-wrap gap-2 sm:gap-4 mt-3 p-2 sm:p-3 bg-gray-50 rounded-lg border border-gray-200">
+        <div class="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm text-gray-700 font-medium px-2 py-1 rounded-md bg-white border border-gray-200 transition-all duration-200 hover:bg-gray-100 hover:-translate-y-1 hover:shadow-sm">
+          <div class="w-4 sm:w-6 h-1 rounded-sm bg-primary-500 shadow-sm"></div>
           <span>Price</span>
         </div>
         @if (showSMA20()) {
-          <div class="flex items-center gap-2 text-sm text-gray-700 font-medium px-2 py-1 rounded-md bg-white border border-gray-200 transition-all duration-200 hover:bg-gray-100 hover:-translate-y-1 hover:shadow-sm">
-            <div class="w-6 h-1 rounded-sm bg-secondary-500 shadow-sm" style="background-image: repeating-linear-gradient(90deg, transparent, transparent 6px, white 6px, white 12px);"></div>
+          <div class="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm text-gray-700 font-medium px-2 py-1 rounded-md bg-white border border-gray-200 transition-all duration-200 hover:bg-gray-100 hover:-translate-y-1 hover:shadow-sm">
+            <div class="w-4 sm:w-6 h-1 rounded-sm bg-secondary-500 shadow-sm" style="background-image: repeating-linear-gradient(90deg, transparent, transparent 6px, white 6px, white 12px);"></div>
             <span>SMA 20</span>
           </div>
         }
         @if (showSMA50()) {
-          <div class="flex items-center gap-2 text-sm text-gray-700 font-medium px-2 py-1 rounded-md bg-white border border-gray-200 transition-all duration-200 hover:bg-gray-100 hover:-translate-y-1 hover:shadow-sm">
-            <div class="w-6 h-1 rounded-sm bg-orange-500 shadow-sm" style="background-image: repeating-linear-gradient(90deg, transparent, transparent 6px, white 6px, white 12px);"></div>
+          <div class="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm text-gray-700 font-medium px-2 py-1 rounded-md bg-white border border-gray-200 transition-all duration-200 hover:bg-gray-100 hover:-translate-y-1 hover:shadow-sm">
+            <div class="w-4 sm:w-6 h-1 rounded-sm bg-orange-500 shadow-sm" style="background-image: repeating-linear-gradient(90deg, transparent, transparent 6px, white 6px, white 12px);"></div>
             <span>SMA 50</span>
           </div>
         }
         @if (showEMA12()) {
-          <div class="flex items-center gap-2 text-sm text-gray-700 font-medium px-2 py-1 rounded-md bg-white border border-gray-200 transition-all duration-200 hover:bg-gray-100 hover:-translate-y-1 hover:shadow-sm">
-            <div class="w-6 h-1 rounded-sm bg-green-500 shadow-sm"></div>
+          <div class="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm text-gray-700 font-medium px-2 py-1 rounded-md bg-white border border-gray-200 transition-all duration-200 hover:bg-gray-100 hover:-translate-y-1 hover:shadow-sm">
+            <div class="w-4 sm:w-6 h-1 rounded-sm bg-green-500 shadow-sm"></div>
             <span>EMA 12</span>
           </div>
         }
         @if (showEMA26()) {
-          <div class="flex items-center gap-2 text-sm text-gray-700 font-medium px-2 py-1 rounded-md bg-white border border-gray-200 transition-all duration-200 hover:bg-gray-100 hover:-translate-y-1 hover:shadow-sm">
-            <div class="w-6 h-1 rounded-sm bg-purple-500 shadow-sm"></div>
+          <div class="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm text-gray-700 font-medium px-2 py-1 rounded-md bg-white border border-gray-200 transition-all duration-200 hover:bg-gray-100 hover:-translate-y-1 hover:shadow-sm">
+            <div class="w-4 sm:w-6 h-1 rounded-sm bg-purple-500 shadow-sm"></div>
             <span>EMA 26</span>
           </div>
         }
