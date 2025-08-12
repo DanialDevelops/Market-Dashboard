@@ -5,11 +5,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatChipsModule } from '@angular/material/chips';
-import { AiService } from '../../services/ai.service';
+import { MarketAnalysisService, MarketSentiment } from '../../services/ai.service';
 import { PriceData } from '../../services/app-store.service';
 
 @Component({
-  selector: 'app-ai-insight-card',
+  selector: 'app-market-insights',
   standalone: true,
   imports: [
     CommonModule,
@@ -20,278 +20,167 @@ import { PriceData } from '../../services/app-store.service';
     MatChipsModule
   ],
   template: `
-    <mat-card class="ai-insight-card">
+    <mat-card class="mb-6 bg-gradient-to-br from-slate-50 to-white border border-gray-200 relative overflow-hidden">
+      <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary-500 to-secondary-500"></div>
+      
       <mat-card-header>
-        <mat-card-title class="card-title">
-          <mat-icon class="ai-icon">psychology</mat-icon>
-          AI Market Insights
+        <mat-card-title class="flex items-center gap-2 text-gray-900 font-semibold text-lg">
+          <mat-icon class="text-2xl bg-gradient-to-r from-primary-500 to-secondary-500 bg-clip-text text-transparent">psychology</mat-icon>
+          Market Analysis
         </mat-card-title>
-        <div class="card-actions">
+        <div class="ml-auto">
           <button 
             mat-icon-button 
-            (click)="refreshInsights()"
-            [disabled]="loading()"
-            matTooltip="Refresh insights"
+            (click)="refreshAnalysis()"
+            [disabled]="isLoading()"
+            matTooltip="Refresh analysis"
+            class="text-gray-600 hover:text-gray-900"
           >
-            <mat-icon [class.spinning]="loading()">refresh</mat-icon>
+            <mat-icon [class.animate-spin]="isLoading()">refresh</mat-icon>
           </button>
         </div>
       </mat-card-header>
 
       <mat-card-content>
-        @if (loading()) {
-          <div class="loading-container">
-            <mat-progress-spinner diameter="40" mode="indeterminate"></mat-progress-spinner>
-            <p>Analyzing market data...</p>
+        @if (isLoading()) {
+          <div class="flex flex-col items-center p-8 text-gray-600 bg-gray-50 rounded-lg my-4">
+            <mat-progress-spinner diameter="40" mode="indeterminate" class="text-primary-500"></mat-progress-spinner>
+            <p class="mt-4 italic">Analyzing market data...</p>
           </div>
         } @else {
-          <!-- Market Sentiment -->
-          @if (sentiment()) {
-            <div class="sentiment-section">
-              <h4>Market Sentiment</h4>
-              <div class="sentiment-indicator">
+          @if (marketSentiment()) {
+            <div class="mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+              <h4 class="text-lg font-semibold text-gray-900 mb-3">Market Sentiment</h4>
+              <div class="flex items-center justify-between mb-4 flex-wrap gap-3">
                 <mat-chip-set>
                   <mat-chip 
-                    [class.bullish]="sentiment()!.sentiment === 'bullish'"
-                    [class.bearish]="sentiment()!.sentiment === 'bearish'"
-                    [class.neutral]="sentiment()!.sentiment === 'neutral'"
+                    [class]="getSentimentClasses()"
                   >
                     <mat-icon matChipAvatar>
                       {{ getSentimentIcon() }}
                     </mat-icon>
-                    {{ sentiment()!.sentiment | titlecase }}
+                    {{ marketSentiment()!.sentiment | titlecase }}
                   </mat-chip>
                 </mat-chip-set>
-                <div class="confidence">
-                  Confidence: {{ sentiment()!.confidence | number:'1.0-0' }}%
+                <div class="text-sm text-gray-600 font-medium bg-white px-2 py-1 rounded-md border border-gray-200">
+                  Confidence: {{ marketSentiment()!.confidence | number:'1.0-0' }}%
                 </div>
               </div>
               
-              <div class="key-points">
-                <h5>Key Points:</h5>
-                <ul>
-                  @for (point of sentiment()!.keyPoints; track point) {
-                    <li>{{ point }}</li>
+              <div>
+                <h5 class="text-base font-semibold text-gray-700 mb-2">Key Points:</h5>
+                <ul class="pl-5">
+                  @for (point of marketSentiment()!.keyPoints; track point) {
+                    <li class="my-1 text-sm text-gray-600 leading-relaxed relative">
+                      <span class="absolute -left-3 text-primary-500 font-bold">•</span>
+                      {{ point }}
+                    </li>
                   }
                 </ul>
               </div>
             </div>
           }
 
-          <!-- AI Summary -->
-          @if (summary()) {
-            <div class="summary-section">
-              <h4>Analysis Summary</h4>
-              <p class="summary-text">{{ summary() }}</p>
+          @if (technicalAnalysis()) {
+            <div>
+              <h4 class="text-lg font-semibold text-gray-900 mb-3">Technical Analysis</h4>
+              <p class="leading-relaxed text-gray-700 text-base bg-white p-4 rounded-lg border-l-4 border-primary-500 shadow-sm border border-gray-200">
+                {{ technicalAnalysis() }}
+              </p>
             </div>
           }
 
-          @if (error()) {
-            <div class="error-section">
-              <mat-icon color="warn">warning</mat-icon>
-              <p>{{ error() }}</p>
+          @if (errorMessage()) {
+            <div class="flex items-center gap-2 text-red-500 bg-gradient-to-br from-red-50 to-white p-3 rounded-md border border-red-500 my-4">
+              <mat-icon>warning</mat-icon>
+              <p class="font-medium">{{ errorMessage() }}</p>
             </div>
           }
         }
       </mat-card-content>
 
-      <mat-card-actions>
+      <mat-card-actions class="p-4 bg-gray-50 border-t border-gray-200">
         <button 
           mat-button 
           color="primary" 
-          (click)="refreshInsights()"
-          [disabled]="loading()"
+          (click)="refreshAnalysis()"
+          [disabled]="isLoading()"
+          class="bg-gradient-to-r from-primary-500 to-secondary-500 text-white font-semibold px-4 py-2 rounded-lg transition-all duration-200 hover:-translate-y-1 hover:shadow-lg disabled:bg-gray-300 disabled:text-gray-500 disabled:transform-none disabled:shadow-none"
         >
           <mat-icon>auto_awesome</mat-icon>
-          Generate New Insights
+          Generate New Analysis
         </button>
       </mat-card-actions>
     </mat-card>
   `,
   styles: [`
-    .ai-insight-card {
-      margin-bottom: 24px;
-      background: linear-gradient(135deg, #f8f9ff 0%, #fff 100%);
-      border: 1px solid #e3f2fd;
+    .bullish-chip {
+      @apply bg-gradient-to-r from-green-500 to-emerald-500 text-white font-semibold shadow-sm;
     }
     
-    .card-title {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      color: #3f51b5;
+    .bearish-chip {
+      @apply bg-gradient-to-r from-red-500 to-rose-500 text-white font-semibold shadow-sm;
     }
     
-    .ai-icon {
-      background: linear-gradient(45deg, #3f51b5, #ff4081);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    
-    .card-actions {
-      margin-left: auto;
-    }
-    
-    .loading-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 32px;
-      color: #666;
-    }
-    
-    .loading-container p {
-      margin-top: 16px;
-      font-style: italic;
-    }
-    
-    .spinning {
-      animation: spin 1s linear infinite;
-    }
-    
-    @keyframes spin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-    
-    .sentiment-section {
-      margin-bottom: 24px;
-    }
-    
-    .sentiment-section h4 {
-      margin: 0 0 12px 0;
-      color: #333;
-      font-size: 16px;
-    }
-    
-    .sentiment-indicator {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 16px;
-    }
-    
-    .confidence {
-      font-size: 14px;
-      color: #666;
-      font-weight: 500;
-    }
-    
-    mat-chip.bullish {
-      background-color: #e8f5e8;
-      color: #2e7d32;
-    }
-    
-    mat-chip.bearish {
-      background-color: #ffebee;
-      color: #c62828;
-    }
-    
-    mat-chip.neutral {
-      background-color: #f5f5f5;
-      color: #616161;
-    }
-    
-    .key-points h5 {
-      margin: 0 0 8px 0;
-      color: #555;
-      font-size: 14px;
-    }
-    
-    .key-points ul {
-      margin: 0;
-      padding-left: 20px;
-    }
-    
-    .key-points li {
-      margin: 4px 0;
-      color: #666;
-      font-size: 14px;
-    }
-    
-    .summary-section h4 {
-      margin: 0 0 12px 0;
-      color: #333;
-      font-size: 16px;
-    }
-    
-    .summary-text {
-      line-height: 1.6;
-      color: #555;
-      font-size: 15px;
-      background: white;
-      padding: 16px;
-      border-radius: 8px;
-      border-left: 4px solid #3f51b5;
-      margin: 0;
-    }
-    
-    .error-section {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      color: #d32f2f;
-      background: #ffebee;
-      padding: 12px;
-      border-radius: 4px;
-    }
-    
-    .error-section p {
-      margin: 0;
+    .neutral-chip {
+      @apply bg-gradient-to-r from-gray-400 to-gray-500 text-white font-semibold shadow-sm;
     }
   `],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AiInsightCardComponent {
-  private aiService = inject(AiService);
+export class MarketInsightsComponent {
+  private marketAnalysisService = inject(MarketAnalysisService);
   
   symbol = input.required<string>();
-  prices = input.required<PriceData[]>();
+  priceData = input.required<PriceData[]>();
 
-  loading = signal(false);
-  summary = signal<string | null>(null);
-  sentiment = signal<{
-    sentiment: 'bullish' | 'bearish' | 'neutral';
-    confidence: number;
-    keyPoints: string[];
-  } | null>(null);
-  error = signal<string | null>(null);
+  isLoading = signal(false);
+  technicalAnalysis = signal<string | null>(null);
+  marketSentiment = signal<MarketSentiment | null>(null);
+  errorMessage = signal<string | null>(null);
 
   ngOnInit() {
-    this.refreshInsights();
+    this.refreshAnalysis();
   }
 
-  refreshInsights() {
-    if (this.loading()) return;
+  refreshAnalysis() {
+    if (this.isLoading()) return;
     
-    this.loading.set(true);
-    this.error.set(null);
+    this.isLoading.set(true);
+    this.errorMessage.set(null);
 
-    // Load both insights in parallel
-    const summaryPromise = this.aiService.summarizeStock(this.symbol(), this.prices()).toPromise();
-    const sentimentPromise = this.aiService.getMarketSentiment(this.symbol()).toPromise();
+    const analysisPromise = this.marketAnalysisService.generateTechnicalAnalysis(this.symbol(), this.priceData()).toPromise();
+    const sentimentPromise = this.marketAnalysisService.analyzeMarketSentiment(this.symbol()).toPromise();
 
-    Promise.all([summaryPromise, sentimentPromise])
-      .then(([summaryResult, sentimentResult]) => {
-        this.summary.set(summaryResult || null);
-        this.sentiment.set(sentimentResult || null);
+    Promise.all([analysisPromise, sentimentPromise])
+      .then(([analysisResult, sentimentResult]) => {
+        this.technicalAnalysis.set(analysisResult || null);
+        this.marketSentiment.set(sentimentResult || null);
       })
       .catch(error => {
-        console.error('Error loading AI insights:', error);
-        this.error.set('Failed to load AI insights. Please try again.');
+        console.error('Error loading market analysis:', error);
+        this.errorMessage.set('Failed to load market analysis. Please try again.');
       })
       .finally(() => {
-        this.loading.set(false);
+        this.isLoading.set(false);
       });
   }
 
   getSentimentIcon(): string {
-    const sentimentValue = this.sentiment()?.sentiment;
-    switch (sentimentValue) {
+    const sentiment = this.marketSentiment()?.sentiment;
+    switch (sentiment) {
       case 'bullish': return 'trending_up';
       case 'bearish': return 'trending_down';
       default: return 'trending_flat';
+    }
+  }
+
+  getSentimentClasses(): string {
+    const sentiment = this.marketSentiment()?.sentiment;
+    switch (sentiment) {
+      case 'bullish': return 'bullish-chip';
+      case 'bearish': return 'bearish-chip';
+      default: return 'neutral-chip';
     }
   }
 }

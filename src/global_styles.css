@@ -1,103 +1,75 @@
-/* Angular Material Theme */
-@import '@angular/material/prebuilt-themes/indigo-pink.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-/* Global Styles */
-* {
-  box-sizing: border-box;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@layer base {
+  html {
+    font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
+  }
+  
+  body {
+    @apply bg-gray-50 text-gray-900 antialiased;
+  }
 }
 
-html, body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  font-family: 'Roboto', 'Helvetica Neue', sans-serif;
-}
-
-body {
-  background-color: #fafafa;
-}
-
-/* Custom Material Theme Overrides */
-.mat-mdc-card {
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
-  border-radius: 12px !important;
-}
-
-.mat-mdc-button {
-  border-radius: 8px !important;
-}
-
-.mat-mdc-outlined-button {
-  border-radius: 8px !important;
-}
-
-.mat-mdc-fab {
-  border-radius: 16px !important;
-}
-
-.mat-mdc-mini-fab {
-  border-radius: 12px !important;
-}
-
-/* Smooth transitions */
-* {
-  transition: box-shadow 0.2s ease, transform 0.2s ease;
-}
-
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #c1c1c1;
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #a8a8a8;
-}
-
-/* Focus indicators for accessibility */
-.mat-mdc-button:focus,
-.mat-mdc-icon-button:focus,
-.mat-mdc-outlined-button:focus {
-  outline: 2px solid #3f51b5;
-  outline-offset: 2px;
-}
-
-/* Loading animations */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.mat-mdc-card {
-  animation: fadeIn 0.3s ease-out;
-}
-
-/* Material color customizations */
-.mat-primary {
-  color: #3f51b5 !important;
-}
-
-.mat-accent {
-  color: #ff4081 !important;
-}
-
-.mat-warn {
-  color: #f44336 !important;
-}
-
-/* Responsive typography */
-@media (max-width: 768px) {
-  h1 { font-size: 1.8rem; }
-  h2 { font-size: 1.5rem; }
-  h3 { font-size: 1.3rem; }
-  h4 { font-size: 1.1rem; }
+@layer components {
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    @apply w-2;
+  }
+  
+  ::-webkit-scrollbar-track {
+    @apply bg-gray-100 rounded-full;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gray-300 rounded-full hover:bg-gray-400 transition-colors;
+  }
+  
+  /* Material Design overrides */
+  .mat-mdc-card {
+    @apply bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-all duration-300;
+  }
+  
+  .mat-mdc-button {
+    @apply rounded-lg font-medium transition-all duration-200;
+  }
+  
+  .mat-mdc-raised-button {
+    @apply rounded-lg font-medium shadow-sm hover:shadow-md transition-all duration-200;
+  }
+  
+  .mat-mdc-outlined-button {
+    @apply rounded-lg font-medium border-2 transition-all duration-200;
+  }
+  
+  .mat-mdc-fab, .mat-mdc-mini-fab {
+    @apply rounded-full shadow-lg hover:shadow-xl transition-all duration-200;
+  }
+  
+  .mat-mdc-toolbar {
+    @apply bg-white/80 backdrop-blur-md border-b border-gray-200;
+  }
+  
+  .mat-mdc-form-field {
+    @apply rounded-lg;
+  }
+  
+  .mat-mdc-chip {
+    @apply rounded-full font-medium;
+  }
+  
+  .mat-mdc-progress-spinner {
+    @apply text-primary-500;
+  }
+  
+  .mat-mdc-slide-toggle {
+    @apply text-primary-500;
+  }
+  
+  .mat-mdc-option {
+    @apply hover:bg-gray-50;
+  }
 }

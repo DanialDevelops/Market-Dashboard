@@ -1,27 +1,27 @@
 import { Injectable } from '@angular/core';
-import { PriceData, IndicatorData } from './app-store.service';
+import { PriceData, TechnicalIndicators } from './app-store.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class IndicatorService {
+export class TechnicalIndicatorService {
 
-  calculateAllIndicators(prices: PriceData[]): IndicatorData {
-    if (prices.length === 0) return {};
+  calculateAllIndicators(priceData: PriceData[]): TechnicalIndicators {
+    if (priceData.length === 0) return {};
 
-    const closePrices = prices.map(p => p.close);
+    const closePrices = priceData.map(p => p.close);
     
     return {
-      sma20: this.calculateSMA(closePrices, 20),
-      sma50: this.calculateSMA(closePrices, 50),
-      ema12: this.calculateEMA(closePrices, 12),
-      ema26: this.calculateEMA(closePrices, 26),
-      rsi: this.calculateRSI(closePrices, 14),
+      sma20: this.calculateSimpleMovingAverage(closePrices, 20),
+      sma50: this.calculateSimpleMovingAverage(closePrices, 50),
+      ema12: this.calculateExponentialMovingAverage(closePrices, 12),
+      ema26: this.calculateExponentialMovingAverage(closePrices, 26),
+      rsi: this.calculateRelativeStrengthIndex(closePrices, 14),
       macd: this.calculateMACD(closePrices)
     };
   }
 
-  private calculateSMA(prices: number[], period: number): number[] {
+  private calculateSimpleMovingAverage(prices: number[], period: number): number[] {
     const sma: number[] = [];
     
     for (let i = 0; i < prices.length; i++) {
@@ -36,7 +36,7 @@ export class IndicatorService {
     return sma;
   }
 
-  private calculateEMA(prices: number[], period: number): number[] {
+  private calculateExponentialMovingAverage(prices: number[], period: number): number[] {
     const ema: number[] = [];
     const multiplier = 2 / (period + 1);
     
@@ -49,7 +49,7 @@ export class IndicatorService {
     return ema;
   }
 
-  private calculateRSI(prices: number[], period: number): number[] {
+  private calculateRelativeStrengthIndex(prices: number[], period: number): number[] {
     const rsi: number[] = [];
     const gains: number[] = [];
     const losses: number[] = [];
@@ -76,17 +76,16 @@ export class IndicatorService {
       }
     }
     
-    // Add NaN for first price since RSI starts from second price
     return [NaN, ...rsi];
   }
 
   private calculateMACD(prices: number[]) {
-    const ema12 = this.calculateEMA(prices, 12);
-    const ema26 = this.calculateEMA(prices, 26);
-    const macd = ema12.map((val, i) => val - ema26[i]);
-    const signal = this.calculateEMA(macd, 9);
-    const histogram = macd.map((val, i) => val - signal[i]);
+    const ema12 = this.calculateExponentialMovingAverage(prices, 12);
+    const ema26 = this.calculateExponentialMovingAverage(prices, 26);
+    const macdLine = ema12.map((val, i) => val - ema26[i]);
+    const signalLine = this.calculateExponentialMovingAverage(macdLine, 9);
+    const histogram = macdLine.map((val, i) => val - signalLine[i]);
     
-    return { macd, signal, histogram };
+    return { macd: macdLine, signal: signalLine, histogram };
   }
 }

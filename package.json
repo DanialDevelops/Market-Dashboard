@@ -1,10 +1,15 @@
 {
-  "name": "angular-starter",
+  "name": "technical-analysis-dashboard",
+  "version": "1.0.0",
+  "description": "A modern, interactive stock market dashboard with technical analysis indicators",
   "private": true,
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build"
+    "build": "ng build",
+    "build:prod": "ng build --configuration production",
+    "test": "ng test",
+    "lint": "ng lint"
   },
   "dependencies": {
     "@angular/animations": "^20.0.0",
@@ -24,6 +29,20 @@
     "@angular/build": "^20.0.0",
     "@angular/cli": "^20.0.0",
     "@angular/compiler-cli": "^20.0.0",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.17",
     "typescript": "^5.8.2"
-  }
+  },
+  "keywords": [
+    "angular",
+    "typescript",
+    "stock-market",
+    "technical-analysis",
+    "dashboard",
+    "trading",
+    "financial"
+  ],
+  "author": "Your Name",
+  "license": "MIT"
 }

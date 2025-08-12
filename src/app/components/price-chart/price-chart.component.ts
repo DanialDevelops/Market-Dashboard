@@ -1,32 +1,42 @@
 import { Component, input, computed, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PriceData, IndicatorData } from '../../services/app-store.service';
+import { PriceData, TechnicalIndicators, IndicatorSettings } from '../../services/app-store.service';
 
 @Component({
   selector: 'app-price-chart',
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="chart-container">
-      <svg [attr.viewBox]="viewBox()" class="price-chart">
-        <!-- Background grid -->
+    <div class="w-full h-[450px] relative bg-white rounded-xl p-4 shadow-lg border border-gray-200 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+      <svg [attr.viewBox]="viewBox()" class="w-full h-[380px] border border-gray-200 rounded-lg bg-gradient-to-br from-gray-50 to-white relative">
         <defs>
           <pattern id="grid" width="40" height="20" patternUnits="userSpaceOnUse">
-            <path d="M 40 0 L 0 0 0 20" fill="none" stroke="#f0f0f0" stroke-width="1"/>
+            <path d="M 40 0 L 0 0 0 20" fill="none" stroke="#e5e7eb" stroke-width="1"/>
           </pattern>
         </defs>
         <rect width="100%" height="100%" fill="url(#grid)" />
         
-        <!-- Price line -->
+        <defs>
+          <radialGradient id="bgGradient1" cx="20%" cy="80%" r="50%">
+            <stop offset="0%" stop-color="rgba(99, 102, 241, 0.05)"/>
+            <stop offset="100%" stop-color="transparent"/>
+          </radialGradient>
+          <radialGradient id="bgGradient2" cx="80%" cy="20%" r="50%">
+            <stop offset="0%" stop-color="rgba(236, 72, 153, 0.05)"/>
+            <stop offset="100%" stop-color="transparent"/>
+          </radialGradient>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#bgGradient1)" />
+        <rect width="100%" height="100%" fill="url(#bgGradient2)" />
+        
         <path 
           [attr.d]="pricePath()" 
           fill="none" 
           stroke="#3f51b5" 
           stroke-width="2"
-          class="price-line"
+          class="drop-shadow-lg stroke-linecap-round stroke-linejoin-round"
         />
         
-        <!-- SMA 20 line -->
         @if (showSMA20()) {
           <path 
             [attr.d]="sma20Path()" 
@@ -34,11 +44,10 @@ import { PriceData, IndicatorData } from '../../services/app-store.service';
             stroke="#ff4081" 
             stroke-width="1.5"
             stroke-dasharray="5,5"
-            class="sma-line"
+            class="drop-shadow-md stroke-linecap-round stroke-linejoin-round"
           />
         }
         
-        <!-- SMA 50 line -->
         @if (showSMA50()) {
           <path 
             [attr.d]="sma50Path()" 
@@ -46,73 +55,69 @@ import { PriceData, IndicatorData } from '../../services/app-store.service';
             stroke="#ff9800" 
             stroke-width="1.5"
             stroke-dasharray="10,5"
-            class="sma-line"
+            class="drop-shadow-md stroke-linecap-round stroke-linejoin-round"
           />
         }
         
-        <!-- EMA 12 line -->
         @if (showEMA12()) {
           <path 
             [attr.d]="ema12Path()" 
             fill="none" 
             stroke="#4caf50" 
             stroke-width="1.5"
-            class="ema-line"
+            class="drop-shadow-md stroke-linecap-round stroke-linejoin-round"
           />
         }
         
-        <!-- EMA 26 line -->
         @if (showEMA26()) {
           <path 
             [attr.d]="ema26Path()" 
             fill="none" 
             stroke="#9c27b0" 
             stroke-width="1.5"
-            class="ema-line"
+            class="drop-shadow-md stroke-linecap-round stroke-linejoin-round"
           />
         }
         
-        <!-- Price points -->
         @for (point of pricePoints(); track $index) {
           <circle 
             [attr.cx]="point.x" 
             [attr.cy]="point.y" 
             r="3" 
             fill="#3f51b5"
-            class="price-point"
+            class="transition-all duration-200 cursor-pointer drop-shadow-md hover:r-6 hover:drop-shadow-lg hover:stroke-white hover:stroke-2"
             [attr.data-price]="point.price"
             [attr.data-date]="point.date"
           />
         }
       </svg>
       
-      <!-- Legend -->
-      <div class="legend">
-        <div class="legend-item">
-          <div class="legend-color price-color"></div>
+      <div class="flex flex-wrap gap-4 mt-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
+        <div class="flex items-center gap-2 text-sm text-gray-700 font-medium px-2 py-1 rounded-md bg-white border border-gray-200 transition-all duration-200 hover:bg-gray-100 hover:-translate-y-1 hover:shadow-sm">
+          <div class="w-6 h-1 rounded-sm bg-primary-500 shadow-sm"></div>
           <span>Price</span>
         </div>
         @if (showSMA20()) {
-          <div class="legend-item">
-            <div class="legend-color sma20-color"></div>
+          <div class="flex items-center gap-2 text-sm text-gray-700 font-medium px-2 py-1 rounded-md bg-white border border-gray-200 transition-all duration-200 hover:bg-gray-100 hover:-translate-y-1 hover:shadow-sm">
+            <div class="w-6 h-1 rounded-sm bg-secondary-500 shadow-sm" style="background-image: repeating-linear-gradient(90deg, transparent, transparent 6px, white 6px, white 12px);"></div>
             <span>SMA 20</span>
           </div>
         }
         @if (showSMA50()) {
-          <div class="legend-item">
-            <div class="legend-color sma50-color"></div>
+          <div class="flex items-center gap-2 text-sm text-gray-700 font-medium px-2 py-1 rounded-md bg-white border border-gray-200 transition-all duration-200 hover:bg-gray-100 hover:-translate-y-1 hover:shadow-sm">
+            <div class="w-6 h-1 rounded-sm bg-orange-500 shadow-sm" style="background-image: repeating-linear-gradient(90deg, transparent, transparent 6px, white 6px, white 12px);"></div>
             <span>SMA 50</span>
           </div>
         }
         @if (showEMA12()) {
-          <div class="legend-item">
-            <div class="legend-color ema12-color"></div>
+          <div class="flex items-center gap-2 text-sm text-gray-700 font-medium px-2 py-1 rounded-md bg-white border border-gray-200 transition-all duration-200 hover:bg-gray-100 hover:-translate-y-1 hover:shadow-sm">
+            <div class="w-6 h-1 rounded-sm bg-green-500 shadow-sm"></div>
             <span>EMA 12</span>
           </div>
         }
         @if (showEMA26()) {
-          <div class="legend-item">
-            <div class="legend-color ema26-color"></div>
+          <div class="flex items-center gap-2 text-sm text-gray-700 font-medium px-2 py-1 rounded-md bg-white border border-gray-200 transition-all duration-200 hover:bg-gray-100 hover:-translate-y-1 hover:shadow-sm">
+            <div class="w-6 h-1 rounded-sm bg-purple-500 shadow-sm"></div>
             <span>EMA 26</span>
           </div>
         }
@@ -120,84 +125,44 @@ import { PriceData, IndicatorData } from '../../services/app-store.service';
     </div>
   `,
   styles: [`
-    .chart-container {
-      width: 100%;
-      height: 400px;
-      position: relative;
-      background: white;
-      border-radius: 8px;
-      padding: 16px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    .stroke-linecap-round {
+      stroke-linecap: round;
     }
     
-    .price-chart {
-      width: 100%;
-      height: 350px;
-      border: 1px solid #e0e0e0;
-      border-radius: 4px;
+    .stroke-linejoin-round {
+      stroke-linejoin: round;
     }
     
-    .price-line {
-      filter: drop-shadow(0 2px 4px rgba(63, 81, 181, 0.2));
+    .drop-shadow-lg {
+      filter: drop-shadow(0 4px 8px rgba(99, 102, 241, 0.3));
     }
     
-    .price-point {
-      transition: r 0.2s ease;
-      cursor: pointer;
+    .drop-shadow-md {
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
     }
     
-    .price-point:hover {
-      r: 5;
-      filter: drop-shadow(0 2px 8px rgba(63, 81, 181, 0.4));
+    .hover\:r-6:hover {
+      r: 6;
     }
     
-    .legend {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 16px;
-      margin-top: 12px;
-      padding: 8px;
-      background: #fafafa;
-      border-radius: 4px;
+    .hover\:drop-shadow-lg:hover {
+      filter: drop-shadow(0 4px 12px rgba(99, 102, 241, 0.5));
     }
     
-    .legend-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 14px;
-      color: #666;
+    .hover\:stroke-white:hover {
+      stroke: white;
     }
     
-    .legend-color {
-      width: 20px;
-      height: 3px;
-      border-radius: 2px;
-    }
-    
-    .price-color { background: #3f51b5; }
-    .sma20-color { background: #ff4081; }
-    .sma50-color { background: #ff9800; }
-    .ema12-color { background: #4caf50; }
-    .ema26-color { background: #9c27b0; }
-    
-    .sma20-color, .sma50-color {
-      background-image: repeating-linear-gradient(90deg, transparent, transparent 5px, white 5px, white 10px);
+    .hover\:stroke-2:hover {
+      stroke-width: 2;
     }
   `],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PriceChartComponent {
-  prices = input.required<PriceData[]>();
-  indicators = input.required<IndicatorData>();
-  enabledIndicators = input.required<{
-    sma20: boolean;
-    sma50: boolean;
-    ema12: boolean;
-    ema26: boolean;
-    rsi: boolean;
-    macd: boolean;
-  }>();
+  priceData = input.required<PriceData[]>();
+  technicalIndicators = input.required<TechnicalIndicators>();
+  enabledIndicators = input.required<IndicatorSettings>();
 
   private readonly chartWidth = 800;
   private readonly chartHeight = 300;
@@ -211,7 +176,7 @@ export class PriceChartComponent {
   showEMA26 = computed(() => this.enabledIndicators().ema26);
 
   private priceRange = computed(() => {
-    const prices = this.prices();
+    const prices = this.priceData();
     if (prices.length === 0) return { min: 0, max: 100 };
     
     const allPrices = prices.map(p => p.close);
@@ -226,7 +191,7 @@ export class PriceChartComponent {
   });
 
   pricePath = computed(() => {
-    const prices = this.prices();
+    const prices = this.priceData();
     if (prices.length === 0) return '';
     
     const range = this.priceRange();
@@ -240,11 +205,11 @@ export class PriceChartComponent {
   });
 
   sma20Path = computed(() => {
-    const sma20 = this.indicators().sma20;
+    const sma20 = this.technicalIndicators().sma20;
     if (!sma20 || sma20.length === 0) return '';
     
     const range = this.priceRange();
-    const prices = this.prices();
+    const prices = this.priceData();
     const points = sma20.map((value, index) => {
       if (isNaN(value)) return null;
       const x = this.padding + (index / (prices.length - 1)) * (this.chartWidth - 2 * this.padding);
@@ -256,11 +221,11 @@ export class PriceChartComponent {
   });
 
   sma50Path = computed(() => {
-    const sma50 = this.indicators().sma50;
+    const sma50 = this.technicalIndicators().sma50;
     if (!sma50 || sma50.length === 0) return '';
     
     const range = this.priceRange();
-    const prices = this.prices();
+    const prices = this.priceData();
     const points = sma50.map((value, index) => {
       if (isNaN(value)) return null;
       const x = this.padding + (index / (prices.length - 1)) * (this.chartWidth - 2 * this.padding);
@@ -272,11 +237,11 @@ export class PriceChartComponent {
   });
 
   ema12Path = computed(() => {
-    const ema12 = this.indicators().ema12;
+    const ema12 = this.technicalIndicators().ema12;
     if (!ema12 || ema12.length === 0) return '';
     
     const range = this.priceRange();
-    const prices = this.prices();
+    const prices = this.priceData();
     const points = ema12.map((value, index) => {
       if (isNaN(value)) return null;
       const x = this.padding + (index / (prices.length - 1)) * (this.chartWidth - 2 * this.padding);
@@ -288,11 +253,11 @@ export class PriceChartComponent {
   });
 
   ema26Path = computed(() => {
-    const ema26 = this.indicators().ema26;
+    const ema26 = this.technicalIndicators().ema26;
     if (!ema26 || ema26.length === 0) return '';
     
     const range = this.priceRange();
-    const prices = this.prices();
+    const prices = this.priceData();
     const points = ema26.map((value, index) => {
       if (isNaN(value)) return null;
       const x = this.padding + (index / (prices.length - 1)) * (this.chartWidth - 2 * this.padding);
@@ -304,7 +269,7 @@ export class PriceChartComponent {
   });
 
   pricePoints = computed(() => {
-    const prices = this.prices();
+    const prices = this.priceData();
     const range = this.priceRange();
     
     return prices.map((price, index) => ({

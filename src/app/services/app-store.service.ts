@@ -9,7 +9,7 @@ export interface PriceData {
   volume: number;
 }
 
-export interface IndicatorData {
+export interface TechnicalIndicators {
   sma20?: number[];
   sma50?: number[];
   ema12?: number[];
@@ -22,30 +22,35 @@ export interface IndicatorData {
   };
 }
 
-export interface AppState {
+export interface IndicatorSettings {
+  sma20: boolean;
+  sma50: boolean;
+  ema12: boolean;
+  ema26: boolean;
+  rsi: boolean;
+  macd: boolean;
+}
+
+export type TimePeriod = '1D' | '1W' | '1M' | '3M' | '6M' | '1Y';
+
+export interface MarketState {
   currentSymbol: string | null;
-  prices: PriceData[];
-  indicators: IndicatorData;
-  enabledIndicators: {
-    sma20: boolean;
-    sma50: boolean;
-    ema12: boolean;
-    ema26: boolean;
-    rsi: boolean;
-    macd: boolean;
-  };
-  loading: boolean;
-  error: string | null;
+  priceData: PriceData[];
+  technicalIndicators: TechnicalIndicators;
+  enabledIndicators: IndicatorSettings;
+  selectedTimePeriod: TimePeriod;
+  isLoading: boolean;
+  errorMessage: string | null;
 }
 
 @Injectable({
   providedIn: 'root'
 })
-export class AppStoreService {
-  private state = signal<AppState>({
+export class MarketStoreService {
+  private state = signal<MarketState>({
     currentSymbol: null,
-    prices: [],
-    indicators: {},
+    priceData: [],
+    technicalIndicators: {},
     enabledIndicators: {
       sma20: true,
       sma50: true,
@@ -54,37 +59,41 @@ export class AppStoreService {
       rsi: false,
       macd: false
     },
-    loading: false,
-    error: null
+    selectedTimePeriod: '1M',
+    isLoading: false,
+    errorMessage: null
   });
 
-  // Computed selectors
   readonly currentSymbol = computed(() => this.state().currentSymbol);
-  readonly prices = computed(() => this.state().prices);
-  readonly indicators = computed(() => this.state().indicators);
+  readonly priceData = computed(() => this.state().priceData);
+  readonly technicalIndicators = computed(() => this.state().technicalIndicators);
   readonly enabledIndicators = computed(() => this.state().enabledIndicators);
-  readonly loading = computed(() => this.state().loading);
-  readonly error = computed(() => this.state().error);
+  readonly selectedTimePeriod = computed(() => this.state().selectedTimePeriod);
+  readonly isLoading = computed(() => this.state().isLoading);
+  readonly errorMessage = computed(() => this.state().errorMessage);
   
   readonly latestPrice = computed(() => {
-    const prices = this.state().prices;
+    const prices = this.state().priceData;
     return prices.length > 0 ? prices[prices.length - 1] : null;
   });
 
-  // State mutations
   setCurrentSymbol(symbol: string) {
     this.state.update(state => ({ ...state, currentSymbol: symbol }));
   }
 
-  setPrices(prices: PriceData[]) {
-    this.state.update(state => ({ ...state, prices }));
+  setPriceData(prices: PriceData[]) {
+    this.state.update(state => ({ ...state, priceData: prices }));
   }
 
-  setIndicators(indicators: IndicatorData) {
-    this.state.update(state => ({ ...state, indicators }));
+  setTechnicalIndicators(indicators: TechnicalIndicators) {
+    this.state.update(state => ({ ...state, technicalIndicators: indicators }));
   }
 
-  toggleIndicator(indicator: keyof AppState['enabledIndicators']) {
+  setTimePeriod(period: TimePeriod) {
+    this.state.update(state => ({ ...state, selectedTimePeriod: period }));
+  }
+
+  toggleIndicator(indicator: keyof IndicatorSettings) {
     this.state.update(state => ({
       ...state,
       enabledIndicators: {
@@ -95,20 +104,20 @@ export class AppStoreService {
   }
 
   setLoading(loading: boolean) {
-    this.state.update(state => ({ ...state, loading }));
+    this.state.update(state => ({ ...state, isLoading: loading }));
   }
 
   setError(error: string | null) {
-    this.state.update(state => ({ ...state, error }));
+    this.state.update(state => ({ ...state, errorMessage: error }));
   }
 
   reset() {
     this.state.update(state => ({
       ...state,
       currentSymbol: null,
-      prices: [],
-      indicators: {},
-      error: null
+      priceData: [],
+      technicalIndicators: {},
+      errorMessage: null
     }));
   }
 }
