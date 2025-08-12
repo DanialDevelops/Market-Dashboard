@@ -1,0 +1,103 @@
+/* Angular Material Theme */
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+
+/* Global Styles */
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: 'Roboto', 'Helvetica Neue', sans-serif;
+}
+
+body {
+  background-color: #fafafa;
+}
+
+/* Custom Material Theme Overrides */
+.mat-mdc-card {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+  border-radius: 12px !important;
+}
+
+.mat-mdc-button {
+  border-radius: 8px !important;
+}
+
+.mat-mdc-outlined-button {
+  border-radius: 8px !important;
+}
+
+.mat-mdc-fab {
+  border-radius: 16px !important;
+}
+
+.mat-mdc-mini-fab {
+  border-radius: 12px !important;
+}
+
+/* Smooth transitions */
+* {
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Focus indicators for accessibility */
+.mat-mdc-button:focus,
+.mat-mdc-icon-button:focus,
+.mat-mdc-outlined-button:focus {
+  outline: 2px solid #3f51b5;
+  outline-offset: 2px;
+}
+
+/* Loading animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.mat-mdc-card {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Material color customizations */
+.mat-primary {
+  color: #3f51b5 !important;
+}
+
+.mat-accent {
+  color: #ff4081 !important;
+}
+
+.mat-warn {
+  color: #f44336 !important;
+}
+
+/* Responsive typography */
+@media (max-width: 768px) {
+  h1 { font-size: 1.8rem; }
+  h2 { font-size: 1.5rem; }
+  h3 { font-size: 1.3rem; }
+  h4 { font-size: 1.1rem; }
+}
